@@ -97,9 +97,9 @@ class ImageDataset(Dataset):
 batch_size = 32
 
 epochs = 30
-learning_rate = 1e-4
+learning_rate = 1e-5
 momentum = 0.9
-weight_decay = 0.05 # 1e-8
+weight_decay = 0.0 # 1e-8
 
 device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 
@@ -228,11 +228,11 @@ model.head = nn.Sequential(
     nn.Linear(hidden_dim, hidden_dim//16),
     nn.GELU(),
     nn.Linear(hidden_dim//16, out_dim),
+    # nn.Linear(hidden_dim, out_dim),
     nn.Sigmoid()
 )
 
-# model.load_state_dict(torch.load('./checkpoints/resnet18-f37072fd.pth'), strict=False)
-model.load_state_dict(torch.load('checkpoints/swin_large_patch4_window7_224_22k.pth'), strict=False)
+model.load_state_dict(torch.load('checkpoints/swin_large_patch4_window7_224_22k.pth')['model'], strict=False)
 
 model.to(device)
 
