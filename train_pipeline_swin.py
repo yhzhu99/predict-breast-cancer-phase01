@@ -251,7 +251,7 @@ for epoch in range(epochs):
         scheduler
     )
     print(f"Epoch {epoch}: Loss = {train_loss}")
-    if epoch % 2 == 0:
+    if epoch % 1 == 0:
         metric_valid = val_epoch(model, test_loader)
         print("Val Score:", metric_valid)
         if metric_valid < best_score:
@@ -267,5 +267,5 @@ for epoch in range(epochs):
 # In[ ]:
 
 
-best_score
+print('Best score:', best_score)
 
