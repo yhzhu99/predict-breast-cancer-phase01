@@ -33,14 +33,14 @@ from models.swin_transformer import SwinTransformer
 # In[3]:
 
 
-train = pd.read_pickle("./datasets/train.pkl")
+train = pd.read_pickle("./datasets/v2/train.pkl")
 train_x = train["x"]
 train_y = train["y"]
 train_id = train["id"]
 train_x = torch.tensor(torch.stack(train_x).detach().cpu().numpy())
 train_y = torch.tensor(train_y)
 
-test = pd.read_pickle("./datasets/test.pkl")
+test = pd.read_pickle("./datasets/v2/test.pkl")
 test_x = test["x"]
 test_y = test["y"]
 test_id = test["id"]
@@ -148,7 +148,7 @@ criterion = mse_loss
 # In[12]:
 
 
-def train_epoch(model, dataloader, loss_fn, optimizer, scheduler):
+def train_epoch(model, dataloader, loss_fn, optimizer):
     train_loss = []
     model.train()
     for step, data in enumerate(dataloader):
@@ -169,7 +169,6 @@ def train_epoch(model, dataloader, loss_fn, optimizer, scheduler):
         loss.backward()
         optimizer.step()
     metric_train_loss = np.array(train_loss).mean()
-    scheduler.step(metric_train_loss)
     return metric_train_loss
 
 def val_epoch(model, dataloader):
@@ -225,10 +224,11 @@ hidden_dim = model.head.in_features
 out_dim = 1
 
 model.head = nn.Sequential(
-    nn.Linear(hidden_dim, hidden_dim//16),
-    nn.GELU(),
-    nn.Linear(hidden_dim//16, out_dim),
+    #nn.Linear(hidden_dim, hidden_dim//16),
+    #nn.GELU(),
+    #nn.Linear(hidden_dim//16, out_dim),
     # nn.Linear(hidden_dim, out_dim),
+    nn.Linear(hidden_dim, out_dim),
     nn.Sigmoid()
 )
 
@@ -248,11 +248,11 @@ for epoch in range(epochs):
         train_loader,
         criterion,
         optimizer,
-        scheduler
     )
     print(f"Epoch {epoch}: Loss = {train_loss}")
     if epoch % 1 == 0:
         metric_valid = val_epoch(model, test_loader)
+        scheduler.step(metric_valid)
         print("Val Score:", metric_valid)
         if metric_valid < best_score:
             best_score = metric_valid
