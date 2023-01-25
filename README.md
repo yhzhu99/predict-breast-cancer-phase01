@@ -1,5 +1,26 @@
 # breast-cancer-identification
+
 Identifying high-risk breast cancer using digital pathology images
+
+## Required folders and files
+
+```bash
+checkpoints/
+    # model checkpoints
+csv_dir/
+    # mapping relationship
+datasets/
+    # python pickle (tensor) datasets
+models/
+    # swin transformer model class
+split_biopsies.ipynb
+prepare_datasets.ipynb
+train_pipeline_resnet50.ipynb
+train_pipeline_swin.py
+test_ensemble.ipynb
+submit.ipynb
+license.txt
+```
 
 ## Usage
 
@@ -37,3 +58,9 @@ Run `test_ensemble.ipynb`
 The script load ResNet and Swin models' parameters and outputs the prediction logits for holdout set.
 
 Then we calibrate and ensemble the two outputs (take average scores) and export the final prediction results for expected holdout set.
+
+### Submit results
+
+- Specify prediction result CSV, Run `submit.ipynb`
+
+(Our team's final best result is in `submit_1220.csv`)
